@@ -5,7 +5,7 @@ from app import app
 
 
 @app.route('/movie/<title>')
-def movie_by_title(title):
+def movie_by_title(title: str):
     """
     Поиск фильма по названию. Если таких фильмов несколько, выводится самый свежий.
     """
@@ -14,7 +14,7 @@ def movie_by_title(title):
 
 
 @app.route('/movie/<int:year_from>/to/<int:year_to>')
-def movies_by_years_range(year_from, year_to):
+def movies_by_years_range(year_from: int, year_to: int):
     """
     Поиск фильмов по диапазону лет. Выводятся первые 100 найденных.
     """
@@ -23,14 +23,14 @@ def movies_by_years_range(year_from, year_to):
 
 
 @app.route('/rating/<name>')
-def rating_page(name: str):
+def rating_page(rating_name: str):
     """
     Поиск по группам рейтинга: для детей, для семейного просмотра, для взрослых.
     """
     allowed_rating_names = {'children', 'family', 'adult'}
-    if name not in allowed_rating_names:
+    if rating_name not in allowed_rating_names:
         abort(404)
-    res = utils.find_by_rating(name)
+    res = utils.find_by_rating(rating_name)
     return jsonify(res)
 
 

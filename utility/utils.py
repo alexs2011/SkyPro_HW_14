@@ -32,7 +32,7 @@ def find_movie_by_title(title: str) -> dict:
     executed_query = netflix_dao.execute_query(sqlite_query)
 
     #  Если фильм не найден.
-    if len(executed_query) == 0:
+    if not executed_query:
         res["is_found"] = False
         return res
 
