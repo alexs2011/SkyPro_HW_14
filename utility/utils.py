@@ -1,8 +1,13 @@
+import json
 from collections import Counter
 
 from dao.netflix_dao import NetflixDAO
 
 netflix_dao = NetflixDAO("netflix.db")
+
+
+def to_JSON(data) -> str:
+    return json.dumps(data, indent=2, ensure_ascii=False)
 
 
 def find_movie_by_title(title: str) -> dict:
@@ -138,3 +143,22 @@ def get_actors_played_with_given_actors(first_actor: str, second_actor: str) -> 
 
     res = [actor for actor, count in actors_counter.items() if count >= 2]
     return res
+
+
+def find_by_type_year_genre(type: str, year: int, genre: str) -> str:
+    sqlite_query = f"SELECT title, description " \
+                   f"FROM 'netflix' " \
+                   f"WHERE type='{type}' " \
+                   f"AND release_year={year} " \
+                   f"AND listed_in LIKE '%{genre}%' "
+    executed_query = netflix_dao.execute_query(sqlite_query)
+
+    res = []
+    for row in executed_query:
+        d = {
+            "title": row[0],
+            "description": row[1].strip()
+        }
+        res.append(d)
+
+    return to_JSON(res)
