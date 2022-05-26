@@ -1,3 +1,5 @@
+from collections import Counter
+
 from dao.netflix_dao import NetflixDAO
 
 netflix_dao = NetflixDAO("netflix.db")
@@ -111,4 +113,28 @@ def find_by_genre(genre: str) -> list[dict]:
         }
         res.append(d)
 
+    return res
+
+
+def get_actors_played_with_given_actors(first_actor: str, second_actor: str) -> list:
+    """
+    Получает в качестве аргумента имена двух актеров, сохраняет всех актеров из колонки cast (если участвовали оба
+    переданных актёра) и возвращает список тех, кто играет с ними в паре больше 2 раз.
+    """
+    sqlite_query = f"SELECT `cast` " \
+                   f"FROM 'netflix' " \
+                   f"WHERE `cast` LIKE '%{first_actor}%' " \
+                   f"AND `cast` LIKE '%{second_actor}%' "
+    executed_query = netflix_dao.execute_query(sqlite_query)
+
+    #  Создаём общий список всех актёров (с повторениями), игравших с заданными, убирая при этом заданных актёров.
+    actors_lst = []
+    for row in executed_query:
+        actors_row = row[0].split(", ")
+        actors_lst.extend([actor for actor in actors_row if actor not in {first_actor, second_actor}])
+
+    #  Подсчитываем, сколько раз встречаются актёры (т.е. в скольки фильмах они играли).
+    actors_counter = Counter(actors_lst)
+
+    res = [actor for actor, count in actors_counter.items() if count >= 2]
     return res
