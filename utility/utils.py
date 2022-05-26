@@ -146,6 +146,9 @@ def get_actors_played_with_given_actors(first_actor: str, second_actor: str) -> 
 
 
 def find_by_type_year_genre(type: str, year: int, genre: str) -> str:
+    """
+    Поиск картин по типу, году выхода и жанру.
+    """
     sqlite_query = f"SELECT title, description " \
                    f"FROM 'netflix' " \
                    f"WHERE type='{type}' " \
