@@ -25,8 +25,8 @@ def find_movie_by_title(title: str) -> dict:
 
     sqlite_query = f"SELECT country, release_year, listed_in, description " \
                    f"FROM 'netflix' " \
-                   f"WHERE type='Movie' " \
-                   f"AND title='{title}' " \
+                   f"WHERE type='Movie' COLLATE NOCASE " \
+                   f"AND title='{title}' COLLATE NOCASE " \
                    f"ORDER BY date_added DESC " \
                    f"LIMIT 1"
     executed_query = netflix_dao.execute_query(sqlite_query)
@@ -105,7 +105,7 @@ def find_by_genre(genre: str) -> list[dict]:
     sqlite_query = f"SELECT title, description " \
                    f"FROM 'netflix' " \
                    f"WHERE type='Movie' " \
-                   f"AND listed_in LIKE '%{genre}%' " \
+                   f"AND listed_in LIKE '%{genre}%' COLLATE NOCASE " \
                    f"ORDER BY date_added DESC " \
                    f"LIMIT 10"
     executed_query = netflix_dao.execute_query(sqlite_query)
@@ -128,8 +128,8 @@ def get_actors_played_with_given_actors(first_actor: str, second_actor: str) -> 
     """
     sqlite_query = f"SELECT `cast` " \
                    f"FROM 'netflix' " \
-                   f"WHERE `cast` LIKE '%{first_actor}%' " \
-                   f"AND `cast` LIKE '%{second_actor}%' "
+                   f"WHERE `cast` LIKE '%{first_actor}%' COLLATE NOCASE " \
+                   f"AND `cast` LIKE '%{second_actor}%' COLLATE NOCASE "
     executed_query = netflix_dao.execute_query(sqlite_query)
 
     #  Создаём общий список всех актёров (с повторениями), игравших с заданными, убирая при этом заданных актёров.
@@ -151,9 +151,9 @@ def find_by_type_year_genre(type: str, year: int, genre: str) -> str:
     """
     sqlite_query = f"SELECT title, description " \
                    f"FROM 'netflix' " \
-                   f"WHERE type='{type}' " \
+                   f"WHERE type='{type}' COLLATE NOCASE " \
                    f"AND release_year={year} " \
-                   f"AND listed_in LIKE '%{genre}%' "
+                   f"AND listed_in LIKE '%{genre}%' COLLATE NOCASE "
     executed_query = netflix_dao.execute_query(sqlite_query)
 
     res = []

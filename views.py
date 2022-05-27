@@ -22,7 +22,7 @@ def movies_by_years_range(year_from: int, year_to: int):
     return jsonify(res)
 
 
-@app.route('/rating/<name>')
+@app.route('/rating/<rating_name>')
 def rating_page(rating_name: str):
     """
     Поиск по группам рейтинга: для детей, для семейного просмотра, для взрослых.
